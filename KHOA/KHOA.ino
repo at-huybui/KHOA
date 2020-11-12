@@ -12,7 +12,7 @@ bool _isLock = true;     // Biến lưu trạng thái cửa
 int _countVibrate = 0;   // biến lưu số lần ngắt tạo rung động
 String _idStore[2] =    // Mảng lưu trữ id hợp lệ
 {
-  "00 00 00 00",
+  "43 60 48 3E",
   "00 00 00 00"
 };
 
@@ -21,7 +21,7 @@ void setup() {
   Serial.begin(9600); // Mở cổng serial debug
   System_init();  // khởi tạo hệ thông
   Lcd_init();         //Khởi tạo LCD
-  Sim900_init();      // Khởi tạo module sim
+  //  Sim900_init();      // Khởi tạo module sim
   RF_init();          // Khởi tạo module RFID
   delay(1000);
 
@@ -68,6 +68,9 @@ void ISR_vibrate() {
 
 
 void loop() {
-  scanCard();
-  checkVibrate();
+  //  scanCard();
+  //  checkVibrate();
+  if (RF_getID().equals(_idStore[0])) {
+    Serial.println(" match ");
+  }
 }
