@@ -10,5 +10,6 @@
 
 void RF_init();
 String RF_getID() ;
+bool RF_matchId(String id);
 
 #endif /* _RC522_H_ */

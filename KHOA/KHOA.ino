@@ -10,11 +10,6 @@ unsigned long mil_unlock = 0;               // Biến millis hẹn thời gian m
 bool _isLock = true;     // Biến lưu trạng thái cửa
 
 int _countVibrate = 0;   // biến lưu số lần ngắt tạo rung động
-String _idStore[2] =    // Mảng lưu trữ id hợp lệ
-{
-  "43 60 48 3E",
-  "00 00 00 00"
-};
 
 
 void setup() {
@@ -32,16 +27,14 @@ void setup() {
 
 void scanCard() {
   if (millis() - mil_scan_card > 500 && _isLock) {  //kiểm tra thời gian quét và trạng thái khóa
-    String id = RF_getID();                     //quét thẻ
-    for (int i = 0; i < 2; i++) {     // kiểm tra id hợp lệ
-      if (id.equals(_idStore[i])) {
+    String _id = RF_getID();                     //quét thẻ
+      if (RF_matchId(_id)) {
         tick();
         unLock();     // mở khóa
         mil_unlock = millis(); // set lại biến hẹn giờ
         _isLock = false;  // set trạng thái mở khóa
         Lcd_print("Unlock", 1, 0);
         Serial.print("---Unlock");
-      }
     }
   }
 
@@ -70,7 +63,5 @@ void ISR_vibrate() {
 void loop() {
   //  scanCard();
   //  checkVibrate();
-  if (RF_getID().equals(_idStore[0])) {
-    Serial.println(" match ");
-  }
+  RF_matchId(RF_getID());
 }
