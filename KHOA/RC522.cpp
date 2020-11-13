@@ -1,6 +1,6 @@
 #include "RC522.h"
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
+MFRC522 mfrc522(SDA_PIN, RST_PIN);  // Create MFRC522 instance
 
 String _idStore[2] =    // Mảng lưu trữ id hợp lệ
 {

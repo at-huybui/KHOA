@@ -2,18 +2,37 @@
 #define _DEFINE_MORE_H_
 #include <Arduino.h>
 
+#if defined(ARDUINO_AVR_MEGA2560)
 
-#define PIN_VIBRATE         2   // tích cực mức thấp 
-#define INTERRUPT_VIBRATE   0   // Ngắt chân 2
-#define PIN_BUZZER          4   // tích cực mức thấp 
-#define PIN_LOCK            5  // tích cực mức thấp 
-#define PIN_IR              6  // tích cực mức thấp 
+/* define for MEGA board */
+#define PIN_VIBRATE         2     // cảm biến rung ngắt số thứ 0 tích cực cạnh xuống
+#define PIN_BUZZER          5     // loa tích cực mức thấp 
+#define PIN_LOCK            6     //  Khóa   
+#define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
+#define RST_PIN             9     // RST pin của RFID
+#define SDA_PIN             10    // SDA pin của RFID
+#define LCD_ADRESS          0x27  // Uno
+
+#else
+
+/* define for UNO board and NANO board */
+#define PIN_VIBRATE         2     // cảm biến rung ngắt số thứ 0 tích cực cạnh xuống
+#define PIN_BUZZER          5     // loa tích cực mức thấp 
+#define PIN_LOCK            6     //  Khóa   
+#define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
+#define RST_PIN             9     // RST pin của RFID
+#define SDA_PIN             53    // SDA pin của RFID
+#define LCD_ADRESS          0x3F  // Uno
+
+#endif
+
+#define TIME_UNLOCK         3000  // thời gian mở khóa
 
 void System_init();
 void unLock();
 void lock();
 void doubleTick();
 void tick();
-bool isUnlockIr();
+bool isOpen();
 
 #endif /* _DEFINE_MORE_H_ */

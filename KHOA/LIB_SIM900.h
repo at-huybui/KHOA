@@ -1,6 +1,8 @@
 #ifndef _LIB_SIM900A_H_
 #define _LIB_SIM900A_H_
 
+#include "DEFINE.h"
+
 #include <Arduino.h>
 
 bool Sim900_init();

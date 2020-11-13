@@ -26,7 +26,7 @@ bool Sim900_sendSMS(char *text) { // funtion gửi tin nhắn
   char rt = sms.SendSMS(numberPhone, text);  // bắt đầu gửi tin nhắn với text
   switch (rt) { // kiểm tra trạng thái gửi
     case -1: {
-        Serial.println("[SIM900] -1 - dấu phẩy. đường đến mô-đun GSM không miễn phí");
+        Serial.println("[SIM900] -1 - đường đến mô-đun GSM không miễn phí");
         return false;
         break;
       }
