@@ -1,4 +1,5 @@
 #include "DEFINE.h"
+#include <Arduino.h>
 
 void System_init() {
   pinMode(PIN_BUZZER, OUTPUT);
@@ -8,6 +9,7 @@ void System_init() {
 
   digitalWrite(PIN_LOCK, HIGH);
   digitalWrite(PIN_BUZZER, HIGH);
+  tick();
 }
 
 void unLock() {

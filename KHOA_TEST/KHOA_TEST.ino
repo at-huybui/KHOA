@@ -23,8 +23,8 @@ void setup() {
   Serial.begin(9600); // Mở cổng serial debug
   System_init();  // khởi tạo hệ thông
   Lcd_init();         //Khởi tạo LCD
-  Sim900_init();      // Khởi tạo module sim
-  RF_init();          // Khởi tạo module RFID
+//  Sim900_init();      // Khởi tạo module sim
+//  RF_init();          // Khởi tạo module RFID
   delay(1000);
 
   attachInterrupt(0, ISR_vibrate, FALLING); // Bật ngắt cho chân cảm biến rung

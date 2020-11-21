@@ -3,63 +3,70 @@
 #include "LIB_SIM900.h"
 #include "DEFINE.h"
 
+#include <SoftwareSerial.h>
+
 unsigned long mil_scan_card = 0;            // Biến millis hẹn giờ quét card
 unsigned long mil_check_vibrate_sensor = 0; // Biến millis hẹn giờ check sensor
 unsigned long mil_unlock = 0;               // Biến millis hẹn thời gian mở khóa
-unsigned long mil_turnLcd = 0;               // Biến millis hẹn thời gian mở khóa
+unsigned long mil_turnLcd = 0;               // Biến millis hẹn giờ tắt lcd
+unsigned long mil_checkSMS = 0;               // Biến millis hẹn giờ check SMS
 
-bool _isLock = false;     // Biến lưu trạng thái cửa
-bool _isTurnLcd = false;
+unsigned long mil_runloop = 0;               // Biến millis runloop
 
-volatile static int _countVibrate = 0;   // biến lưu số lần ngắt tạo rung động
+
+
+volatile bool _isSending = true;   // lưu trạng thái đang gửi tin nhắn
+volatile bool _isLock = false;     // Biến lưu trạng thái cửa
+bool _isTurnLcd = false;           // trạng thái bật lcd
+
+volatile static byte _countVibrate = 0;   // biến lưu số lần ngắt tạo rung động
 
 void setup() {
   Serial.begin(9600); // Mở cổng serial debug
-  System_init();  // khởi tạo hệ thông
+  System_init();      // khởi tạo hệ thông
   Lcd_init();         //Khởi tạo LCD
-  //  Sim900_init();      // Khởi tạo module sim
-  RF_init();          // Khởi tạo module RFID
-  delay(1000);
-
+  Lcd_print("---CONNECTING---", 0, 0);
+  Sim900_init();      // Khởi tạo module sim
   attachInterrupt(0, ISR_vibrate, FALLING); // Bật ngắt cho chân cảm biến rung
-  Lcd_print("----WELLCOME----", 0, 0);
+  Lcd_print(F("----WELLCOME----"), 0, 0);
   doubleTick();  // còi báo
   onLcd();
+  _isSending = false;
 }
 
+
+void loop() {
+  if (!_isSending) {
+    scanCard();
+    checkVibrate();
+    smsUnLock();
+  }
+}
+
+
 void scanCard() {
-  if (_isLock && millis() - mil_unlock > (TIME_UNLOCK + 1000) ) { //kiểm tra thời gian quét và trạng thái khóa
+  if (_isLock && millis() - mil_unlock > (TIME_UNLOCK + 500) ) { //kiểm tra thời gian quét và trạng thái khóa
     String _id = RF_getID();                     //quét thẻ
     if (RF_matchId(_id)) {
-      onLcd();
-      tick();
-      unLock();     // mở khóa
-      mil_unlock = millis(); // set lại biến hẹn giờ
-      _isLock = false;  // set trạng thái mở khóa
-      Lcd_print("-----Unlock-----", 0, 1);
-      Serial.println("-----Unlock-----");
+      Serial.print(F("[id]")); Serial.println(_id);
+      _unLock();
     }
   }
 
   if (isOpen()) {
     if (_isLock) {
-      onLcd();
-      _isLock = false;
-      unLock();
-      tick();
-      Lcd_print("-----Unlock-----", 0, 1);
-      Serial.println("-----Unlock-----");
+      _unLock();
     }
     mil_unlock = millis();
   }
 
-  if (millis() - mil_unlock > TIME_UNLOCK && !_isLock && !isOpen()) { // kiêm tra biến hẹn giờ và trạng thái khóa
+  if (millis() - mil_unlock > TIME_LOCK && !_isLock && !isOpen()) { // kiêm tra biến hẹn giờ và trạng thái khóa
     onLcd();
     doubleTick();
     lock();  // khóa
+    Lcd_print(F("------Lock------"), 0, 1);
+    Serial.println(F("------Lock------"));
     _isLock = true; // set lại trạng thái khóa
-    Lcd_print("------Lock------", 0, 1);
-    Serial.println("------Lock------");
   }
 
   if (_isTurnLcd && millis() - mil_turnLcd > 3000) {
@@ -67,32 +74,76 @@ void scanCard() {
   }
 }
 
+/* Mở Khóa */
+void _unLock() {
+  _isLock = false;
+  onLcd();
+  unLock();
+  tick();
+  _countVibrate = 0;
+  Lcd_print(F("-----Unlock-----"), 0, 1);
+  mil_unlock = millis(); // set lại biến hẹn giờ
+  Serial.println(F("-----Unlock-----"));
+}
+
+/* bật tắt led LCD */
 void onLcd() {
   _isTurnLcd = true;
   Lcd_light();
   mil_turnLcd = millis();
 }
 
-void ISR_vibrate() {
-  _countVibrate++;
-  Serial.println(_countVibrate);
-}
-
-
+/*kiểm tra số lần rung động của cảm biến rung */
 void checkVibrate() {
   if (_countVibrate > 50) {
-    if (isOpen()) {
+    if (!isOpen() && _isLock) {
+      Serial.println(F("*****************WARNING*******************"));
+      if (sendSMS("**WARNING**")) {
+        for(int i = 0; i < 10;i++){
+          doubleTick();
+        }
+        Serial.println(F("Đã send Warning"));
+      } else {
+        Serial.println(F("Chưa send Warning"));
+      }
       _countVibrate = 0;
     } else {
-      Serial.println("*****************WARNING*******************");
       _countVibrate = 0;
-      //    Sim900_sendSMS("WARNING");
-      delay(1000);
     }
   }
 }
 
-void loop() {
-  scanCard();
-  checkVibrate();
+/* Kiếm tra SMS để mở khóa */
+void smsUnLock() {
+  if (millis() - mil_checkSMS > 2000) {
+    mil_checkSMS = millis();
+    String st = Sim900_getSMS();
+    if (st.equals(F(PASS_UNLOCK))) {
+      _unLock();
+      mil_unlock = millis(); // set lại biến hẹn giờ
+    }
+  }
+}
+
+/*gửi SMS */
+bool sendSMS(char* msg) { 
+  _isSending = true;
+  if (Sim900_sendSMS(msg)) {
+    Serial.println(F("Main gửi thành công"));
+    _isSending = false;
+    return true;
+  } else {
+    Serial.println(F("Main gửi thành công"));
+    _isSending = false;
+    return false;
+  }
+}
+
+
+/* Hàm ngắt tại chân số 2, ngắt thứ 0 cho cảm biến rung */
+void ISR_vibrate() {
+  if (_isLock && !_isSending) {
+    _countVibrate++;
+    Serial.println(_countVibrate);
+  }
 }

@@ -10,7 +10,7 @@
 #define PIN_LOCK            6     //  Khóa   
 #define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
 #define RST_PIN             9     // RST pin của RFID
-#define SDA_PIN             10    // SDA pin của RFID
+#define SDA_PIN             53    // SDA pin của RFID
 #define LCD_ADRESS          0x27  // Uno
 
 #else
@@ -21,12 +21,15 @@
 #define PIN_LOCK            6     //  Khóa   
 #define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
 #define RST_PIN             9     // RST pin của RFID
-#define SDA_PIN             53    // SDA pin của RFID
-#define LCD_ADRESS          0x3F  // Uno
+#define SDA_PIN             10    // SDA pin của RFID
+#define LCD_ADRESS          0x27  // Uno
 
 #endif
 
-#define TIME_UNLOCK         3000  // thời gian mở khóa
+#define TIME_UNLOCK         5000  // thời gian mở khóa
+#define TIME_LOCK         3000  // thời gian mở khóa
+
+#define PASS_UNLOCK  "UNLOCK"
 
 void System_init();
 void unLock();

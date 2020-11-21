@@ -3,48 +3,46 @@
 #define lcdVertical     2
 #define lcdHorizontal   16
 
-bool _isInit = false;
-
-LiquidCrystal_I2C lcd(LCD_ADRESS, lcdHorizontal, lcdVertical);
+LiquidCrystal_I2C lcd(0x27, lcdHorizontal, lcdVertical);
 
 void Lcd_init()
 {
   lcd.init();
+  delay(100);
   lcd.backlight();
-  _isInit = true;
 }
 
 void Lcd_gotoxy(int x, int y)
 {
-    lcd.setCursor(x, y);
+  lcd.setCursor(x, y);
 }
 
 void Lcd_setInt(int i, int x, int y)
 {
-    Lcd_gotoxy(x, y);
-    lcd.print(i);
+  Lcd_gotoxy(x, y);
+  lcd.print(i);
 }
 
 void Lcd_print(String st, int x, int y)
 {
-    Lcd_gotoxy(x, y);
-    lcd.print(st);
+  Lcd_gotoxy(x, y);
+  lcd.print(st);
 }
 
 void Lcd_clear()
 {
-    lcd.clear();
+  lcd.clear();
 }
 
 void Lcd_clearY(int y)
 {
-    Lcd_print("                    ", 0, y);
+  Lcd_print("                    ", 0, y);
 }
 
 void Lcd_light() {
-    lcd.backlight();
+  lcd.backlight();
 }
 
 void Lcd_noLight() {
-    lcd.noBacklight();
+  lcd.noBacklight();
 }

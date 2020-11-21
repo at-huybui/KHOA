@@ -2,7 +2,7 @@
 
 #define lcdVertical     4
 #define lcdHorizontal   20
-#define lcdAdress       0x3F
+#define lcdAdress       0x27
 
 LiquidCrystal_I2C lcd(lcdAdress,lcdHorizontal,lcdVertical);
 
