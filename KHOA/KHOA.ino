@@ -99,10 +99,10 @@ void checkVibrate() {
     if (!isOpen() && _isLock) {
       Serial.println(F("*****************WARNING*******************"));
       if (sendSMS("**WARNING**")) {
+        Serial.println(F("Đã send Warning"));
         for(int i = 0; i < 10;i++){
           doubleTick();
         }
-        Serial.println(F("Đã send Warning"));
       } else {
         Serial.println(F("Chưa send Warning"));
       }
