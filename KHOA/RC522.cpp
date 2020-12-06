@@ -6,7 +6,7 @@ String _idStore[2] =    // Mảng lưu trữ id hợp lệ
   "99 BE 1B C9"
 };
 
-MFRC522 mfrc522(10, 9);  // Create MFRC522 instance
+MFRC522 mfrc522(SDA_RFID_PIN, RST_RFID_PIN);  // Create MFRC522 instance
 
 /* Nguyên Mẫu hàm */
 String toHex(char data);

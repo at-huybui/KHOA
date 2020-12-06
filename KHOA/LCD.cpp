@@ -7,9 +7,12 @@ LiquidCrystal_I2C lcd(0x27, lcdHorizontal, lcdVertical);
 
 void Lcd_init()
 {
-  lcd.init();
-  delay(100);
-  lcd.backlight();
+  Wire.begin(D4, D3);           //Bắt đầu 2 chân SDA và SCK của I2C
+  // Khởi tạo LCD
+  lcd.init();                 //Bắt đầu màn hình
+  lcd.backlight();            // Bật đèn nền
+  lcd.home();                 //Đưa con trỏ về vị trí 0,0
+  lcd.display();              // Hiển thị lên màn hình.
 }
 
 void Lcd_gotoxy(int x, int y)

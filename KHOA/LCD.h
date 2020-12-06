@@ -4,11 +4,8 @@
 
 #include "DEFINE.h"
 
-//SDA pin - A4
-//SCL pin - A5
-
-#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 void Lcd_init();
 void Lcd_gotoxy(int x, int y);

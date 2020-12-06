@@ -2,32 +2,26 @@
 #define _DEFINE_MORE_H_
 #include <Arduino.h>
 
-#if defined(ARDUINO_AVR_MEGA2560)
 
-/* define for MEGA board */
-#define PIN_VIBRATE         2     // cảm biến rung ngắt số thứ 0 tích cực cạnh xuống
-#define PIN_BUZZER          5     // loa tích cực mức thấp 
-#define PIN_LOCK            6     //  Khóa   
-#define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
-#define RST_PIN             9     // RST pin của RFID
-#define SDA_PIN             53    // SDA pin của RFID
-#define LCD_ADRESS          0x27  // Uno
+/* RFID PIN define  (VCC 3.3V) */
+#define RST_RFID_PIN        D1  // RST pin
+#define SDA_RFID_PIN        D0  // SDA pin
 
-#else
+//  MOSI    D7
+//  MISO    D6
+//  SCK     D5
 
-/* define for UNO board and NANO board */
-#define PIN_VIBRATE         2     // cảm biến rung ngắt số thứ 0 tích cực cạnh xuống
-#define PIN_BUZZER          5     // loa tích cực mức thấp 
-#define PIN_LOCK            6     //  Khóa   
-#define PIN_IR              7     // cảm biến hồng ngoại tích cực mức thấp
-#define RST_PIN             9     // RST pin của RFID
-#define SDA_PIN             10    // SDA pin của RFID
-#define LCD_ADRESS          0x27  // Uno
+/* LCD PIN define ( VCC 5V) */
+#define SDA_LCD_PIN         D4
+#define SCL_LCD_PIN         D3
 
-#endif
+#define PIN_VIBRATE         D2     // cảm biến rung ngắt số thứ 0 tích cực cạnh xuống
+#define PIN_IR              D8     //SD3     // cảm biến hồng ngoại tích cực mức thấp
+
+#define PIN_BUZZER          D9     // loa tích cực mức thấp 
+#define PIN_LOCK            D10      //SD2     //  Khóa   
 
 #define TIME_UNLOCK         5000  // thời gian mở khóa
-#define TIME_LOCK         3000  // thời gian mở khóa
 
 #define PASS_UNLOCK  "UNLOCK"
 
