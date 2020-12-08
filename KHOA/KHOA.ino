@@ -14,7 +14,7 @@
 #define AIO_SERVERPORT   1883               // use 8883 is used for SSL
 
 #define AIO_USERNAME  "anhkhoa2551"
-#define AIO_KEY       "aio_LqMx76nEbXeXRLrvPlRq1IQKwRKc"
+#define AIO_KEY       "aio_NcoK49XQxjQ28H0J6hqr6AKBnwYQ"
 
 void ICACHE_RAM_ATTR ISR_vibrate();
 
